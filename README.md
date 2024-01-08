@@ -1,6 +1,6 @@
 # PyCube #
 
-Provides for a simple importable 3x3 Rubik's cube.
+Provides for a simple importable 3x3 Rubik's cube. This can be used for cube solvers.
 
 ```python
 from Cube import Cube
@@ -54,5 +54,6 @@ The cube is split into 27 Cubees. Each Cubee has a unique ID which can be used t
 
 Cubee IDs:
 ```
-BOY, BY, BRY, BO, B, BR, BOW, BW, BRW, OY, Y, RY, O, R, OW, W, RW, GOY, GY, GRY, GO, G, GR, GOW, GW, GRW
+BOY, BY, BRY, BO, B, BR, BOW, BW, BRW, OY, Y, RY, O,
+R, OW, W, RW, GOY, GY, GRY, GO, G, GR, GOW, GW, GRW
 ```
