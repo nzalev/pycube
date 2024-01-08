@@ -150,7 +150,6 @@ class Cube:
         self._cubees[slice[3]] = self._cubees[slice[7]]
         self._cubees[slice[7]] = tmp
 
-
     def _rotate_counter_clockwise(self, slice):
         tmp = self._cubees[slice[0]]
         self._cubees[slice[0]] = self._cubees[slice[2]]
