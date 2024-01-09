@@ -31,8 +31,8 @@ class Cubee:
 
 class Slice():
     def __init__(self, cube, indices: list, idx_start=None, idx_end=None) -> None:
-        self.indices = indices
         self.cube = cube
+        self.indices = indices
         self.idx = idx_start - 1 if (idx_start) else -1
         self.idx_end = idx_end if (idx_end) else len(indices)
 
@@ -88,7 +88,7 @@ class Cube:
         b = "\033[34m■\033[00m" if color else 'B'
         o = "\033[38;5;166m■\033[00m" if color else 'O'
 
-        self.cubees = [Cubee() for i in range(3*3*3)]
+        self.cubees = [Cubee() for _ in range(3*3*3)]
 
         self._slice_u = Slice(self, [i for i in range(9)])
         self._slice_d = Slice(self, [i for i in range(18, 27)])
@@ -107,24 +107,24 @@ class Cube:
         for cubee in self.cubees: cubee._set_id()
 
         self.turn_map = {
-            "R"  : self.turn_R,
-            "R2" : self.turn_R2,
-            "R'" : self.turn_R_prime,
-            "L"  : self.turn_L,
-            "L2" : self.turn_L2,
-            "L'" : self.turn_L_prime,
-            "U"  : self.turn_U,
-            "U2" : self.turn_U2,
-            "U'" : self.turn_U_prime,
-            "D"  : self.turn_D,
-            "D2" : self.turn_D2,
-            "D'" : self.turn_D_prime,
-            "F"  : self.turn_F,
-            "F2" : self.turn_F2,
-            "F'" : self.turn_F_prime,
-            "B"  : self.turn_B,
-            "B2" : self.turn_B2,
-            "B'" : self.turn_B_prime
+            "R"  : lambda: self._turn(self._slice_r, '_turn_R_LP', clockwise=True),
+            "R'" : lambda: self._turn(self._slice_r, '_turn_L_RP', clockwise=False),
+            "L"  : lambda: self._turn(self._slice_l, '_turn_L_RP', clockwise=False),
+            "L'" : lambda: self._turn(self._slice_l, '_turn_R_LP', clockwise=True),
+            "U"  : lambda: self._turn(self._slice_u, '_turn_U_DP', clockwise=True),
+            "U'" : lambda: self._turn(self._slice_u, '_turn_D_UP', clockwise=False),
+            "D"  : lambda: self._turn(self._slice_d, '_turn_D_UP', clockwise=False),
+            "D'" : lambda: self._turn(self._slice_d, '_turn_U_DP', clockwise=True),
+            "F"  : lambda: self._turn(self._slice_f, '_turn_F_BP', clockwise=True),
+            "F'" : lambda: self._turn(self._slice_f, '_turn_B_FP', clockwise=False),
+            "B"  : lambda: self._turn(self._slice_b, '_turn_B_FP', clockwise=True),
+            "B'" : lambda: self._turn(self._slice_b, '_turn_F_BP', clockwise=False),
+            "R2" : lambda: self._turn2(self.turn_map['R']),
+            "L2" : lambda: self._turn2(self.turn_map['L']),
+            "U2" : lambda: self._turn2(self.turn_map['U']),
+            "D2" : lambda: self._turn2(self.turn_map['D']),
+            "F2" : lambda: self._turn2(self.turn_map['F']),
+            "B2" : lambda: self._turn2(self.turn_map['B'])
         }
 
     def __repr__(self) -> str:
@@ -168,72 +168,15 @@ class Cube:
             *reversed([c.back  for c in self._slice_b[6:9]])
         )
 
-    def execute(self, turns: str):
-        turns = turns.split(' ')
-        for turn in turns:
-            self.turn_map[turn]()
-
     def _turn(self, slice, turn_func, clockwise):
         for cubee in slice:
             getattr(cubee, turn_func)()
         slice.rotate_clockwise() if (clockwise) else slice._rotate_counter_clockwise()
 
-    def turn_R(self):
-        self._turn(self._slice_r, '_turn_R_LP', clockwise=True)
+    def _turn2(self, turn_func):
+        for _ in range(2): turn_func()
 
-    def turn_R_prime(self):
-        self._turn(self._slice_r, '_turn_L_RP', clockwise=False)
-
-    def turn_L(self):
-        self._turn(self._slice_l, '_turn_L_RP', clockwise=False)
-
-    def turn_L_prime(self):
-        self._turn(self._slice_l, '_turn_R_LP', clockwise=True)
-
-    def turn_U(self):
-        self._turn(self._slice_u, '_turn_U_DP', clockwise=True)
-
-    def turn_U_prime(self):
-        self._turn(self._slice_u, '_turn_D_UP', clockwise=False)
-
-    def turn_D(self):
-        self._turn(self._slice_d, '_turn_D_UP', clockwise=False)
-
-    def turn_D_prime(self):
-        self._turn(self._slice_d, '_turn_U_DP', clockwise=True)
-
-    def turn_F(self):
-        self._turn(self._slice_f, '_turn_F_BP', clockwise=True)
-
-    def turn_F_prime(self):
-        self._turn(self._slice_f, '_turn_B_FP', clockwise=False)
-
-    def turn_B(self):
-        self._turn(self._slice_b, '_turn_B_FP', clockwise=True)
-
-    def turn_B_prime(self):
-        self._turn(self._slice_b, '_turn_F_BP', clockwise=False)
-
-    def turn_R2(self):
-        self.turn_R()
-        self.turn_R()
-
-    def turn_L2(self):
-        self.turn_L()
-        self.turn_L()
-
-    def turn_U2(self):
-        self.turn_U()
-        self.turn_U()
-
-    def turn_D2(self):
-        self.turn_D()
-        self.turn_D()
-
-    def turn_F2(self):
-        self.turn_F()
-        self.turn_F()
-
-    def turn_B2(self):
-        self.turn_B()
-        self.turn_B()
+    def execute(self, turns: str):
+        turns = turns.split(' ')
+        for turn in turns:
+            self.turn_map[turn]()
