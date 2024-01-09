@@ -184,19 +184,11 @@ class Cube:
     def turn_R_prime(self):
         self._turn(self._slice_r, '_turn_L_RP', clockwise=False)
 
-    def turn_R2(self):
-        self.turn_R()
-        self.turn_R()
-
     def turn_L(self):
         self._turn(self._slice_l, '_turn_L_RP', clockwise=False)
 
     def turn_L_prime(self):
         self._turn(self._slice_l, '_turn_R_LP', clockwise=True)
-
-    def turn_L2(self):
-        self.turn_L()
-        self.turn_L()
 
     def turn_U(self):
         self._turn(self._slice_u, '_turn_U_DP', clockwise=True)
@@ -204,19 +196,11 @@ class Cube:
     def turn_U_prime(self):
         self._turn(self._slice_u, '_turn_D_UP', clockwise=False)
 
-    def turn_U2(self):
-        self.turn_U()
-        self.turn_U()
-
     def turn_D(self):
         self._turn(self._slice_d, '_turn_D_UP', clockwise=False)
 
     def turn_D_prime(self):
         self._turn(self._slice_d, '_turn_U_DP', clockwise=True)
-
-    def turn_D2(self):
-        self.turn_D()
-        self.turn_D()
 
     def turn_F(self):
         self._turn(self._slice_f, '_turn_F_BP', clockwise=True)
@@ -224,15 +208,31 @@ class Cube:
     def turn_F_prime(self):
         self._turn(self._slice_f, '_turn_B_FP', clockwise=False)
 
-    def turn_F2(self):
-        self.turn_F()
-        self.turn_F()
-
     def turn_B(self):
         self._turn(self._slice_b, '_turn_B_FP', clockwise=True)
 
     def turn_B_prime(self):
         self._turn(self._slice_b, '_turn_F_BP', clockwise=False)
+
+    def turn_R2(self):
+        self.turn_R()
+        self.turn_R()
+
+    def turn_L2(self):
+        self.turn_L()
+        self.turn_L()
+
+    def turn_U2(self):
+        self.turn_U()
+        self.turn_U()
+
+    def turn_D2(self):
+        self.turn_D()
+        self.turn_D()
+
+    def turn_F2(self):
+        self.turn_F()
+        self.turn_F()
 
     def turn_B2(self):
         self.turn_B()
