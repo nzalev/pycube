@@ -29,6 +29,55 @@ class Cubee:
         self.left, self.down, self.right, self.up = self.up, self.left, self.down, self.right
 
 
+class Slice():
+    def __init__(self, cube, indices: list, idx_start=None, idx_end=None) -> None:
+        self.indices = indices
+        self.cube = cube
+        self.idx = idx_start - 1 if (idx_start) else -1
+        self.idx_end = idx_end if (idx_end) else len(indices)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        self.idx += 1
+        if self.idx < self.idx_end:
+            return self.cube.cubees[self.indices[self.idx]]
+        self.idx = -1
+        raise StopIteration
+
+    def __getitem__(self, real_slice: slice):
+        return Slice(self.cube, self.indices, real_slice.start, real_slice.stop)
+
+    def rotate_clockwise(self):
+        cubees = self.cube.cubees
+        tmp = cubees[self.indices[2]]
+        cubees[self.indices[2]] = cubees[self.indices[0]]
+        cubees[self.indices[0]] = cubees[self.indices[6]]
+        cubees[self.indices[6]] = cubees[self.indices[8]]
+        cubees[self.indices[8]] = tmp
+
+        tmp = cubees[self.indices[5]]
+        cubees[self.indices[5]] = cubees[self.indices[1]]
+        cubees[self.indices[1]] = cubees[self.indices[3]]
+        cubees[self.indices[3]] = cubees[self.indices[7]]
+        cubees[self.indices[7]] = tmp
+
+    def _rotate_counter_clockwise(self):
+        cubees = self.cube.cubees
+        tmp = cubees[self.indices[0]]
+        cubees[self.indices[0]] = cubees[self.indices[2]]
+        cubees[self.indices[2]] = cubees[self.indices[8]]
+        cubees[self.indices[8]] = cubees[self.indices[6]]
+        cubees[self.indices[6]] = tmp
+
+        tmp = cubees[self.indices[1]]
+        cubees[self.indices[1]] = cubees[self.indices[5]]
+        cubees[self.indices[5]] = cubees[self.indices[7]]
+        cubees[self.indices[7]] = cubees[self.indices[3]]
+        cubees[self.indices[3]] = tmp
+
+
 class Cube:
     def __init__(self, color=False) -> None:
 
@@ -188,52 +237,3 @@ class Cube:
     def turn_B2(self):
         self.turn_B()
         self.turn_B()
-
-
-class Slice():
-    def __init__(self, cube: Cube, indices: list, idx_start=None, idx_end=None) -> None:
-        self.indices = indices
-        self.cube = cube
-        self.idx = idx_start - 1 if (idx_start) else -1
-        self.idx_end = idx_end if (idx_end) else len(indices)
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        self.idx += 1
-        if self.idx < self.idx_end:
-            return self.cube.cubees[self.indices[self.idx]]
-        self.idx = -1
-        raise StopIteration
-
-    def __getitem__(self, real_slice: slice):
-        return Slice(self.cube, self.indices, real_slice.start, real_slice.stop)
-
-    def rotate_clockwise(self):
-        cubees = self.cube.cubees
-        tmp = cubees[self.indices[2]]
-        cubees[self.indices[2]] = cubees[self.indices[0]]
-        cubees[self.indices[0]] = cubees[self.indices[6]]
-        cubees[self.indices[6]] = cubees[self.indices[8]]
-        cubees[self.indices[8]] = tmp
-
-        tmp = cubees[self.indices[5]]
-        cubees[self.indices[5]] = cubees[self.indices[1]]
-        cubees[self.indices[1]] = cubees[self.indices[3]]
-        cubees[self.indices[3]] = cubees[self.indices[7]]
-        cubees[self.indices[7]] = tmp
-
-    def _rotate_counter_clockwise(self):
-        cubees = self.cube.cubees
-        tmp = cubees[self.indices[0]]
-        cubees[self.indices[0]] = cubees[self.indices[2]]
-        cubees[self.indices[2]] = cubees[self.indices[8]]
-        cubees[self.indices[8]] = cubees[self.indices[6]]
-        cubees[self.indices[6]] = tmp
-
-        tmp = cubees[self.indices[1]]
-        cubees[self.indices[1]] = cubees[self.indices[5]]
-        cubees[self.indices[5]] = cubees[self.indices[7]]
-        cubees[self.indices[7]] = cubees[self.indices[3]]
-        cubees[self.indices[3]] = tmp
