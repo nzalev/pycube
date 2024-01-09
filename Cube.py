@@ -48,12 +48,12 @@ class Cube:
         self._slice_f = [6, 7, 8, 15, 16, 17, 24, 25, 26]
         self._slice_b = [2, 1, 0, 11, 10, 9, 20, 19, 18]
 
-        for cubee in [self.cubees[i] for i in self._slice_l]: cubee.left = o
-        for cubee in [self.cubees[i] for i in self._slice_r]: cubee.right = r
-        for cubee in [self.cubees[i] for i in self._slice_d]: cubee.down = g
-        for cubee in [self.cubees[i] for i in self._slice_u]: cubee.up = b
-        for cubee in [self.cubees[i] for i in self._slice_f]: cubee.front = w
-        for cubee in [self.cubees[i] for i in self._slice_b]: cubee.back = y
+        for cubee in self._slice(self._slice_l): cubee.left = o
+        for cubee in self._slice(self._slice_r): cubee.right = r
+        for cubee in self._slice(self._slice_d): cubee.down = g
+        for cubee in self._slice(self._slice_u): cubee.up = b
+        for cubee in self._slice(self._slice_f): cubee.front = w
+        for cubee in self._slice(self._slice_b): cubee.back = y
 
         for cubee in self.cubees: cubee._set_id()
 
@@ -99,31 +99,35 @@ class Cube:
             '        | {} {} {} |\n'
             '        +-------+\n'
         ).format(
-            *[self.cubees[i].up for i in self._slice_u],
+            *[c.up for c in self._slice(self._slice_u)],
 
-            *[c.left for c in reversed([self.cubees[i] for i in self._slice_l][0:3])],
-            *[c.front for c in [self.cubees[i] for i in self._slice_f][0:3]],
-            *[c.right for c in [self.cubees[i] for i in self._slice_r][0:3]],
-            *[c.back for c in reversed([self.cubees[i] for i in self._slice_b][0:3])],
+            *[c.left for c in reversed(self._slice(self._slice_l[0:3]))],
+            *[c.front for c in self._slice(self._slice_f[0:3])],
+            *[c.right for c in self._slice(self._slice_r[0:3])],
+            *[c.back for c in reversed(self._slice(self._slice_b[0:3]))],
 
-            *[c.left for c in reversed([self.cubees[i] for i in self._slice_l][3:6])],
-            *[c.front for c in [self.cubees[i] for i in self._slice_f][3:6]],
-            *[c.right for c in [self.cubees[i] for i in self._slice_r][3:6]],
-            *[c.back for c in reversed([self.cubees[i] for i in self._slice_b][3:6])],
+            *[c.left for c in reversed(self._slice(self._slice_l[3:6]))],
+            *[c.front for c in self._slice(self._slice_f[3:6])],
+            *[c.right for c in self._slice(self._slice_r[3:6])],
+            *[c.back for c in reversed(self._slice(self._slice_b[3:6]))],
 
-            *[c.left for c in reversed([self.cubees[i] for i in self._slice_l][6:9])],
-            *[c.front for c in [self.cubees[i] for i in self._slice_f][6:9]],
-            *[c.right for c in [self.cubees[i] for i in self._slice_r][6:9]],
-            *[c.back for c in reversed([self.cubees[i] for i in self._slice_b][6:9])],
+            *[c.left for c in reversed(self._slice(self._slice_l[6:9]))],
+            *[c.front for c in self._slice(self._slice_f[6:9])],
+            *[c.right for c in self._slice(self._slice_r[6:9])],
+            *[c.back for c in reversed(self._slice(self._slice_b[6:9]))],
 
-            *[c.down for c in [self.cubees[i] for i in self._slice_d][6:9]],
-            *[c.down for c in [self.cubees[i] for i in self._slice_d][3:6]],
-            *[c.down for c in [self.cubees[i] for i in self._slice_d][0:3]],
+            *[c.down for c in self._slice(self._slice_d[6:9])],
+            *[c.down for c in self._slice(self._slice_d[3:6])],
+            *[c.down for c in self._slice(self._slice_d[0:3])],
 
-            *[c.back for c in reversed([self.cubees[i] for i in self._slice_b][0:3])],
-            *[c.back for c in reversed([self.cubees[i] for i in self._slice_b][3:6])],
-            *[c.back for c in reversed([self.cubees[i] for i in self._slice_b][6:9])]
+            *[c.back for c in reversed(self._slice(self._slice_b[0:3]))],
+            *[c.back for c in reversed(self._slice(self._slice_b[3:6]))],
+            *[c.back for c in reversed(self._slice(self._slice_b[6:9]))]
         )
+
+
+    def _slice(self, slice) -> list[Cubee]:
+        return [self.cubees[i] for i in slice]
 
 
     def _rotate_clockwise(self, slice):
@@ -154,7 +158,7 @@ class Cube:
 
 
     def _turn(self, slice, turn_func, rotate_func):
-        for cubee in [self.cubees[i] for i in slice]:
+        for cubee in self._slice(slice):
             getattr(cubee, turn_func)()
         rotate_func(slice)
 
