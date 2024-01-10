@@ -55,13 +55,12 @@ class Slice():
         cubees[self.indices[2]] = cubees[self.indices[0]]
         cubees[self.indices[0]] = cubees[self.indices[6]]
         cubees[self.indices[6]] = cubees[self.indices[8]]
-        cubees[self.indices[8]] = tmp
-
-        tmp = cubees[self.indices[5]]
+        cubees[self.indices[8]] = cubees[self.indices[5]]
         cubees[self.indices[5]] = cubees[self.indices[1]]
         cubees[self.indices[1]] = cubees[self.indices[3]]
         cubees[self.indices[3]] = cubees[self.indices[7]]
-        cubees[self.indices[7]] = tmp
+        cubees[self.indices[7]] = cubees[self.indices[8]]
+        cubees[self.indices[8]] = tmp
 
     def _rotate_counter_clockwise(self):
         cubees = self.cube.cubees
@@ -69,13 +68,12 @@ class Slice():
         cubees[self.indices[0]] = cubees[self.indices[2]]
         cubees[self.indices[2]] = cubees[self.indices[8]]
         cubees[self.indices[8]] = cubees[self.indices[6]]
-        cubees[self.indices[6]] = tmp
-
-        tmp = cubees[self.indices[1]]
+        cubees[self.indices[6]] = cubees[self.indices[1]]
         cubees[self.indices[1]] = cubees[self.indices[5]]
         cubees[self.indices[5]] = cubees[self.indices[7]]
         cubees[self.indices[7]] = cubees[self.indices[3]]
-        cubees[self.indices[3]] = tmp
+        cubees[self.indices[3]] = cubees[self.indices[6]]
+        cubees[self.indices[6]] = tmp
 
 
 class Cube:
