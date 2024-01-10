@@ -49,31 +49,18 @@ class Slice():
     def __getitem__(self, real_slice: slice):
         return Slice(self.cube, self.indices, real_slice.start, real_slice.stop)
 
-    def rotate_clockwise(self):
+    def _rot(self, swaps, start, end):
         cubees = self.cube.cubees
-        tmp = cubees[self.indices[2]]
-        cubees[self.indices[2]] = cubees[self.indices[0]]
-        cubees[self.indices[0]] = cubees[self.indices[6]]
-        cubees[self.indices[6]] = cubees[self.indices[8]]
-        cubees[self.indices[8]] = cubees[self.indices[5]]
-        cubees[self.indices[5]] = cubees[self.indices[1]]
-        cubees[self.indices[1]] = cubees[self.indices[3]]
-        cubees[self.indices[3]] = cubees[self.indices[7]]
-        cubees[self.indices[7]] = cubees[self.indices[8]]
-        cubees[self.indices[8]] = tmp
+        tmp = cubees[self.indices[start]]
+        for a,b in swaps:
+            cubees[self.indices[a]] = cubees[self.indices[b]]
+        cubees[self.indices[end]] = tmp
 
-    def _rotate_counter_clockwise(self):
-        cubees = self.cube.cubees
-        tmp = cubees[self.indices[0]]
-        cubees[self.indices[0]] = cubees[self.indices[2]]
-        cubees[self.indices[2]] = cubees[self.indices[8]]
-        cubees[self.indices[8]] = cubees[self.indices[6]]
-        cubees[self.indices[6]] = cubees[self.indices[1]]
-        cubees[self.indices[1]] = cubees[self.indices[5]]
-        cubees[self.indices[5]] = cubees[self.indices[7]]
-        cubees[self.indices[7]] = cubees[self.indices[3]]
-        cubees[self.indices[3]] = cubees[self.indices[6]]
-        cubees[self.indices[6]] = tmp
+    def rotate_clockwise(self):
+        self._rot([(2,0), (0,6), (6,8), (8,5), (5,1), (1,3), (3,7), (7,8)], 2, 8)
+
+    def rotate_counter_clockwise(self):
+        self._rot([(0,2), (2,8), (8,6), (6,1), (1,5), (5,7), (7,3), (3,6)], 0, 6)
 
 
 class Cube:
@@ -169,7 +156,7 @@ class Cube:
     def _turn(self, slice, turn_func, clockwise):
         for cubee in slice:
             getattr(cubee, turn_func)()
-        slice.rotate_clockwise() if (clockwise) else slice._rotate_counter_clockwise()
+        slice.rotate_clockwise() if (clockwise) else slice.rotate_counter_clockwise()
 
     def _turn2(self, turn_func):
         for _ in range(2): turn_func()
